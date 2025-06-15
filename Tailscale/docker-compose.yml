@@ -1,0 +1,14 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:latest
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_UP_ARGS=--authkey=${TS_AUTHKEY}
+    volumes:
+      - ./ts-data:/var/lib/tailscale
+    restart: unless-stopped

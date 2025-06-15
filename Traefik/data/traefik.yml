@@ -1,0 +1,38 @@
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+http:
+  routers:
+    http-catchall:
+      rule: hostregexp({host:.+})
+      entrypoints:
+        - http
+      middlewares:
+        - redirect-to-https
+
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: false
+    test-compress:
+      compress: {}
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+certificatesResolvers:
+  letsEncrypt:
+    acme:
+      email: example@gmail.com
+      storage: /ssl/acme.json
+      httpChallenge:
+        entryPoint: http
+
+api:
+  dashboard: true

@@ -1,4 +1,3 @@
-
 # 🌐 Secure VPS Setup with Tailscale and Traefik
 <div align="center">
   
@@ -17,30 +16,39 @@
 
 ## 📑 Table of Contents
 
-- [📦 Project Structure](#-project-structure)
-- [1️⃣ Tailscale Setup](#1️⃣-tailscale-setup)
-- [2️⃣ Traefik Setup](#2️⃣-traefik-setup)
-- [🔒 Secure Dashboard Access](#-secure-dashboard-access)
-- [🖥️ Screenshot](#️-screenshot)
-- [🚀 Launch](#-launch)
-- [📋 Useful Commands](#-useful-commands)
-- [📚 Resources](#-resources)
-- [🧠 TODO / Improvements](#-todo--improvements)
-- [🛠️ License](#️-license)
+- [🌐 Secure VPS Setup with Tailscale and Traefik](#-secure-vps-setup-with-tailscale-and-traefik)
+  - [📑 Table of Contents](#-table-of-contents)
+  - [📦 Project Structure](#-project-structure)
+  - [1️⃣ Tailscale Setup](#1️⃣-tailscale-setup)
+    - [`Tailscale/docker-compose.yml`](#tailscaledocker-composeyml)
+  - [🔑 How to Get a Tailscale Auth Key](#-how-to-get-a-tailscale-auth-key)
+    - [📝 Steps:](#-steps)
+  - [2️⃣ Traefik Setup](#2️⃣-traefik-setup)
+    - [`Traefik/docker-compose.yml`](#traefikdocker-composeyml)
+    - [`Traefik/data/traefik.yml`](#traefikdatatraefikyml)
+  - [🔒 Secure Dashboard Access](#-secure-dashboard-access)
+  - [🖥️ Screenshot](#️-screenshot)
+  - [🚀 Launch](#-launch)
+  - [📋 Useful Commands](#-useful-commands)
+  - [📚 Resources](#-resources)
+  - [🧠 TODO / Improvements](#-todo--improvements)
+  - [🛠️ License](#️-license)
 
 ---
 
 ## 📦 Project Structure
 
 ```
+
 .
 ├── Tailscale
 │ ├── docker-compose.yml
 │ └── .env
-├── traefik
+├── Traefik
 │ ├── docker-compose.yml
 │ └── data
 │ └── traefik.yml
+
 ````
 
 ---
@@ -76,9 +84,40 @@ TS_AUTHKEY=tskey-xxxxxxxxxxxxxxxx
 
 ---
 
+## 🔑 How to Get a Tailscale Auth Key
+
+To run Tailscale in Docker, you need an [auth key](https://tailscale.com/kb/1085/auth-keys/) to authenticate your VPS node.
+
+### 📝 Steps:
+
+1. Go to the [Tailscale Admin Panel](https://login.tailscale.com/admin/settings/keys)
+2. Click **“Generate auth key”**
+3. Choose:
+
+   * ⏳ Expiry time (e.g., 90 days or Never)
+   * 🔁 Reusable (optional)
+   * 📌 Ephemeral (optional)
+4. Copy the key (starts with `tskey-...`)
+5. Save it in your `.env` file:
+
+```env
+TS_AUTHKEY=tskey-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+> 🛡️ **Important:** Never commit this file to Git!
+> Add `.env` to `.gitignore`:
+
+```gitignore
+.env
+ts-data/
+ssl/
+```
+
+---
+
 ## 2️⃣ Traefik Setup
 
-### `traefik/docker-compose.yml`
+### `Traefik/docker-compose.yml`
 
 ```yaml
 services:
@@ -106,7 +145,7 @@ services:
 
 ---
 
-### `traefik/data/traefik.yml`
+### `Traefik/data/traefik.yml`
 
 ```yaml
 entryPoints:
@@ -162,10 +201,10 @@ http://your.tailscale.ts.net/dashboard/
 ---
 
 ## 🖥️ Screenshot
+
 ![image](https://github.com/user-attachments/assets/01665635-dec6-43c8-b207-95bd1995d812)
 
 > Sample Traefik dashboard (official preview)
-
 
 ---
 
